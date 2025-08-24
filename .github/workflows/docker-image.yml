@@ -15,14 +15,14 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag dc-bot
+      run: docker build . --file Dockerfile --tag qbit-issue-tracker
     - name: Log in to GitHub Container Registry
       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
     - name: Tag the Docker image with latest
-      run: docker tag dc-bot ghcr.io/${{ github.repository_owner }}/dc-bot:latest
+      run: docker tag qbit-issue-tracker ghcr.io/${{ github.repository_owner }}/qbit-issue-tracker:latest
     - name: Tag the Docker image with commit SHA
-      run: docker tag dc-bot ghcr.io/${{ github.repository_owner }}/dc-bot:${{ github.sha }}
+      run: docker tag qbit-issue-tracker ghcr.io/${{ github.repository_owner }}/qbit-issue-tracker:${{ github.sha }}
     - name: Push the Docker image with latest
-      run: docker push ghcr.io/${{ github.repository_owner }}/dc-bot:latest
+      run: docker push ghcr.io/${{ github.repository_owner }}/qbit-issue-tracker:latest
     - name: Push the Docker image with commit SHA
-      run: docker push ghcr.io/${{ github.repository_owner }}/dc-bot:${{ github.sha }}
+      run: docker push ghcr.io/${{ github.repository_owner }}/qbit-issue-tracker:${{ github.sha }}
