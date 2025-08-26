@@ -33,13 +33,13 @@ class QbitIssueHandler:
         self.qbt_client.auth_log_out()
 
 
-def get_login_data() -> dict:
-    with open("login.json") as f:
+def get_login_data(filename: str) -> dict:
+    with open(filename) as f:
         return json.loads(f.read())
 
 
 def job():
-    conn_info = get_login_data()
+    conn_info = get_login_data("/config/config.json")
 
     ih = QbitIssueHandler(**conn_info)
     ih.tag_torrents_with_issues()
