@@ -6,28 +6,37 @@ import qbittorrentapi
 import schedule
 
 
+logging.basicConfig(
+    filename="qbit-issue-tracker.log",
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s: %(message)s",
+)
+
+
 class QbitIssueHandler:
     def __init__(self, **conn_info):
         self.qbt_client = qbittorrentapi.Client(**conn_info)
-        logging.basicConfig(
-            filename="qbit-issue-tracker.log",
-            level=logging.INFO,
-            format="%(asctime)s %(levelname)s: %(message)s",
-        )
 
     def tag_torrents_with_issues(self):
+        tag_count = 0
+        removed_count = 0
+
+        logging.info("Started checking for issues")
         for torrent in self.qbt_client.torrents_info():
             for tracker in torrent.trackers:
-                if tracker.status == 4:
+                if tracker.status == 4 and "issue" in torrent.tags:
                     # Tracker has been contacted, but it is not working (or doesn't send proper replies)
                     torrent.setTags("issue")
-                    logging.info(f"tagged {torrent.name} - {torrent.hash} with issue")
+                    logging.debug(f"{torrent.name} - {torrent.hash} tagged with issue")
+                    tag_count += 1
                 elif tracker.status == 2 and "issue" in torrent.tags:
                     # Tracker is working again so remove the issue tag
                     torrent.remove_tags("issue")
-                    logging.info(
-                        f"removed issue tag from {torrent.name} - {torrent.hash}"
-                    )
+                    logging.debug(f"{torrent.name} - {torrent.hash} issue tag removed")
+                    removed_count += 1
+        logging.info(
+            f"Finished. Tagged {tag_count} torrents and removed {removed_count} tags from torrents"
+        )
 
     def qbit_logout(self):
         self.qbt_client.auth_log_out()
