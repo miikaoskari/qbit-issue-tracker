@@ -1,0 +1,7 @@
+services:
+  qbit-issue-tracker:
+    image: ghcr.io/miikaoskari/qbit-issue-tracker:latest
+    container_name: qbit-issue-tracker
+    volumes:
+      - ./:/config
+    restart: unless-stopped
