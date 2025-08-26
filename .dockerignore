@@ -1,1 +1,13 @@
+# config file
 config.json
+
+# git
+.git
+.gitignore
+
+# docker
+Dockerfile
+docker-compose.yaml
+
+# ci 
+.github
